@@ -8,9 +8,7 @@ use Illuminate\Http\Request;
 
 class BukuController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   
     public function index()
     {
         // Ambil semua data buku dengan relasi kategori
@@ -19,9 +17,7 @@ class BukuController extends Controller
         return view('buku.index', compact('bukus'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         // Ambil semua kategori untuk dropdown
@@ -30,12 +26,10 @@ class BukuController extends Controller
         return view('buku.create', compact('kategoris'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+  
     public function store(Request $request)
     {
-        // Validasi input
+        
         $validated = $request->validate([
             'kode' => 'required|string|max:20|unique:buku,kode',
             'judul' => 'required|string|max:500',
@@ -53,16 +47,14 @@ class BukuController extends Controller
             'id_kategori.exists' => 'Kategori tidak valid'
         ]);
 
-        // Simpan ke database
+        
         Buku::create($validated);
 
-        // Redirect dengan pesan sukses
+       
         return redirect('/buku')->with('success', 'Buku berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         // Ambil data buku dengan kategorinya
@@ -71,9 +63,7 @@ class BukuController extends Controller
         return view('buku.show', compact('buku'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(string $id)
     {
         $buku = Buku::findOrFail($id);
@@ -82,9 +72,6 @@ class BukuController extends Controller
         return view('buku.edit', compact('buku', 'kategoris'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $buku = Buku::findOrFail($id);
@@ -110,13 +97,11 @@ class BukuController extends Controller
         // Update data
         $buku->update($validated);
 
-        // Redirect dengan pesan sukses
+       
         return redirect('/buku')->with('success', 'Buku berhasil diupdate!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         $buku = Buku::findOrFail($id);

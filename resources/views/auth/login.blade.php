@@ -21,6 +21,15 @@
         .links { text-align: center; margin-top: 20px; }
         .links a { color: #667eea; text-decoration: none; }
         .links a:hover { text-decoration: underline; }
+
+        /* ↓ tambahkan style baru */
+        .divider { text-align: center; margin: 16px 0; color: #aaa; font-size: 13px; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: #ddd; }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        .btn-google { width: 100%; padding: 12px; background: white; color: #333; border: 1px solid #ddd; border-radius: 5px; font-size: 15px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
+        .btn-google:hover { background: #f5f5f5; }
+        .btn-google img { width: 20px; height: 20px; }
     </style>
 </head>
 <body>
@@ -52,11 +61,18 @@
             </div>
             
             <button type="submit" class="btn">LOGIN</button>
-            
-            <div class="links">
-                Belum punya akun? <a href="{{ route('register') }}">Daftar disini</a>
-            </div>
         </form>
+
+        {{-- ↓ tambahkan ini, di luar form --}}
+        <div class="divider">atau</div>
+        <a href="{{ route('google.redirect') }}" class="btn-google">
+            <img src="https://www.google.com/favicon.ico" alt="Google">
+            Login dengan Google
+        </a>
+
+        <div class="links">
+            Belum punya akun? <a href="{{ route('register') }}">Daftar disini</a>
+        </div>
     </div>
 </body>
 </html>

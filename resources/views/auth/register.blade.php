@@ -19,11 +19,35 @@
         .links { text-align: center; margin-top: 20px; }
         .links a { color: #667eea; text-decoration: none; }
         .links a:hover { text-decoration: underline; }
+        .divider { text-align: center; margin: 16px 0; color: #aaa; font-size: 13px; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 42%; height: 1px; background: #ddd; }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        .btn-google { width: 100%; padding: 12px; background: white; color: #333; border: 1px solid #ddd; border-radius: 5px; font-size: 15px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
+        .btn-google:hover { background: #f5f5f5; }
+        .btn-google img { width: 20px; height: 20px; }
+        .alert { padding: 12px 16px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; }
+        .alert-danger { background: #fef2f2; border: 1px solid #fecaca; color: #dc3545; }
+        .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #d97706; }
     </style>
 </head>
 <body>
     <div class="register-box">
         <h2>📚 Daftar Perpustakaan</h2>
+
+        {{-- Notif email sudah terdaftar --}}
+        @if(session('email_exists'))
+            <div class="alert alert-warning">
+                ⚠️ Email ini sudah terdaftar. Silakan <a href="{{ route('login') }}">login disini</a>.
+            </div>
+        @endif
+
+        {{-- Error umum --}}
+        @if($errors->has('email') && str_contains($errors->first('email'), 'taken'))
+            <div class="alert alert-danger">
+                Email sudah digunakan. Silakan gunakan email lain atau login.
+            </div>
+        @endif
         
         <form method="POST" action="{{ route('register') }}">
             @csrf
@@ -58,11 +82,17 @@
             </div>
             
             <button type="submit" class="btn">DAFTAR</button>
-            
-            <div class="links">
-                Sudah punya akun? <a href="{{ route('login') }}">Login disini</a>
-            </div>
         </form>
+
+        <div class="divider">atau</div>
+        <a href="{{ route('google.redirect') }}" class="btn-google">
+            <img src="https://www.google.com/favicon.ico" alt="Google">
+            Daftar dengan Google
+        </a>
+
+        <div class="links">
+            Sudah punya akun? <a href="{{ route('login') }}">Login disini</a>
+        </div>
     </div>
 </body>
 </html>

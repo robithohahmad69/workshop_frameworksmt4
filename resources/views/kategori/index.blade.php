@@ -38,7 +38,7 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $kategori->nama_kategori }}</td>
                                 <td>
-                                    <label class="badge badge-gradient-info">
+                                    <label class="badge badge-gradient-info"> <!-- bukus dari model kategori -->
                                         {{ $kategori->bukus->count() }} Buku
                                     </label>
                                 </td>

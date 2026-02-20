@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
     
-    @yield('styles')
+    @yield('styles')  <!-- yield adalah tempat untuk menambahkan CSS khusus pada halaman tertentu di dalam file layout utama. Dengan menggunakan @yield('styles'), kita dapat menyisipkan CSS tambahan yang hanya berlaku untuk halaman tertentu, tanpa mempengaruhi halaman lain yang menggunakan layout yang sama. -->
 </head>
 <body>
     <div class="container-scroller">
