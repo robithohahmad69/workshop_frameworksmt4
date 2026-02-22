@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sertifikat Buku</title>
+    <title>Laporan Buku (Portrait)</title>
     <style>
         body {
             font-family: sans-serif;
-            text-align: center;
         }
 
-        h1 {
-            font-size: 35px;
-            margin-bottom: 10px;
+        .header {
+            text-align: center;
+            border-bottom: 2px solid black;
+            margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 30px;
         }
 
         table, th, td {
@@ -30,8 +29,10 @@
 </head>
 <body>
 
-<h1>SERTIFIKAT DATA BUKU</h1>
-<p>Daftar Buku Perpustakaan</p>
+<div class="header">
+    <h2>PERPUSTAKAAN DIGITAL</h2>
+    <p>Daftar Buku dan Kategori</p>
+</div>
 
 <table>
     <thead>

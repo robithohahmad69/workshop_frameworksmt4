@@ -7,23 +7,23 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PdfController extends Controller
 {
-    public function sertifikat()
+    public function landscape()
     {
         $bukus = Buku::with('kategori')->get();
 
-        $pdf = Pdf::loadView('pdf.sertifikat', compact('bukus'))
+        $pdf = Pdf::loadView('pdf.landscape', compact('bukus'))
             ->setPaper('A4', 'landscape');
 
-        return $pdf->stream('sertifikat.pdf');
+        return $pdf->stream('landscape.pdf');
     }
 
-    public function surat()
+    public function portrait()
     {
         $bukus = Buku::with('kategori')->get();
 
-        $pdf = Pdf::loadView('pdf.surat', compact('bukus'))
+        $pdf = Pdf::loadView('pdf.portrait', compact('bukus'))
             ->setPaper('A4', 'portrait');
 
-        return $pdf->stream('surat.pdf');
+        return $pdf->stream('portrait.pdf');
     }
 }

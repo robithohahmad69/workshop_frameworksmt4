@@ -121,14 +121,14 @@ Route::middleware('auth')->group(function () {
     // ========================================
 
     // Sertifikat (Landscape)
-    Route::get('/pdf/sertifikat', 
-        [PdfController::class, 'sertifikat'])
-        ->name('pdf.sertifikat');
+    Route::get('/pdf/landscape', 
+        [PdfController::class, 'landscape'])
+        ->name('pdf.landscape');
 
 
     // Surat / Laporan Buku (Portrait)
-    Route::get('/pdf/surat', 
-        [PdfController::class, 'surat'])
-        ->name('pdf.surat');
+    Route::get('/pdf/portrait', 
+        [PdfController::class, 'portrait'])
+        ->name('pdf.portrait');
 
 });
