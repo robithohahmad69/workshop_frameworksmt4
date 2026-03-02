@@ -20,18 +20,18 @@
                     <h4 class="card-title mb-0">Daftar Buku</h4>
 
                     <div>
-                        {{-- Tombol PDF Sertifikat --}}
-                        <a href="{{ route('pdf.sertifikat') }}" target="_blank"
+                        {{-- Tombol PDF Landscape --}}
+                        <a href="{{ route('pdf.landscape') }}" target="_blank"
                             class="btn btn-success btn-sm">
                             <i class="mdi mdi-file-pdf"></i>
-                            Sertifikat PDF
+                            Laporan Buku Landscape PDF
                         </a>
 
-                        {{-- Tombol PDF Surat --}}
-                        <a href="{{ route('pdf.surat') }}" target="_blank"
+                        {{-- Tombol PDF Portrait --}}
+                        <a href="{{ route('pdf.portrait') }}" target="_blank"
                             class="btn btn-info btn-sm">
                             <i class="mdi mdi-file-pdf-box"></i>
-                            Surat PDF
+                             Laporan Buku Portrait PDF
                         </a>
 
                         {{-- Tombol Tambah Buku --}}

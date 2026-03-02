@@ -51,7 +51,21 @@
             </div>
         </div>
     </div>
+    <div class="col-md-4 stretch-card grid-margin">
+    <div class="card bg-gradient-warning card-img-holder text-white">
+        <div class="card-body">
+            <img src="{{ asset('assets/images/dashboard/circle.svg') }}" class="card-img-absolute" alt="circle-image" />
+            <h4 class="font-weight-normal mb-3">
+                Total Barang
+                <i class="mdi mdi-package-variant mdi-24px float-end"></i>
+            </h4>
+            <h2 class="mb-5">{{ $totalBarang }}</h2>
+            <h6 class="card-text">Barang tersedia di gudang</h6>
+        </div>
+    </div>
+    </div>
 </div>
+
 
 <!-- Tabel Buku Terbaru & Kategori -->
 <div class="row">
@@ -146,7 +160,7 @@
                 <h4 class="card-title">Quick Actions</h4>
                 <p class="card-description">Akses cepat ke fitur-fitur utama</p>
                 <div class="row mt-4">
-                    <div class="col-md-3">
+                    <div class="col-md-3 mb-4">
                         <a href="/buku/create" class="text-decoration-none">
                             <div class="card bg-gradient-primary text-white text-center p-4">
                                 <i class="mdi mdi-plus-circle mdi-48px"></i>
@@ -178,6 +192,15 @@
                             </div>
                         </a>
                     </div>
+
+                <div class="col-md-3 mb-4">
+                    <a href="/barang" class="text-decoration-none">
+                        <div class="card bg-gradient-danger text-white text-center p-4">
+                            <i class="mdi mdi-package-variant mdi-48px"></i>
+                            <h5 class="mt-3">Lihat Barang</h5>
+                        </div>
+                    </a>
+                </div>
                 </div>
             </div>
         </div>

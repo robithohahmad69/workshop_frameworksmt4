@@ -12,6 +12,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\GoogleController;
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\LabelController;
 
 
 // ========================================
@@ -124,11 +126,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/pdf/landscape', 
         [PdfController::class, 'landscape'])
         ->name('pdf.landscape');
-
-
-    // Surat / Laporan Buku (Portrait)
-    Route::get('/pdf/portrait', 
+    // Sertifikat (Portrait)
+    Route::get('/pdf/portrait',
         [PdfController::class, 'portrait'])
         ->name('pdf.portrait');
 
+
+        Route::post('/barang/pdf', [BarangController::class, 'cetakPdf'])->name('barang.pdf');
+
+        // ✅ Dynamic routes belakangan (umum)
+      
+        Route::resource('barang', BarangController::class);
 });

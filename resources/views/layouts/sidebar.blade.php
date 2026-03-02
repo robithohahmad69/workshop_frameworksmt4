@@ -34,6 +34,14 @@
                 <i class="mdi mdi-book-open-variant menu-icon"></i>
             </a>
         </li>
+
+         <li class="nav-item {{ Request::is('barang*') ? 'active' : '' }}">
+            <a class="nav-link" href="/barang">
+                <span class="menu-title">Barang</span>
+                <i class="mdi mdi-package-variant menu-icon"></i>
+            </a>
+        </li>
+        
         
         <!-- Menu Edit Profile -->
         <li class="nav-item {{ Request::is('profile*') ? 'active' : '' }}">

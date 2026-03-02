@@ -30,7 +30,7 @@
 </head>
 <body>
 
-<h1>SERTIFIKAT DATA BUKU</h1>
+<h1> Laporan Buku Landscape PDF</h1>
 <p>Daftar Buku Perpustakaan</p>
 
 <table>

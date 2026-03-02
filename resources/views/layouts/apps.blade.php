@@ -68,5 +68,6 @@
     <script src="{{ asset('assets/js/todolist.js') }}"></script>
     
     @yield('scripts')
+    @stack('scripts')
 </body>
 </html>
