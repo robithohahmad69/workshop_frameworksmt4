@@ -41,6 +41,35 @@
                 <i class="mdi mdi-package-variant menu-icon"></i>
             </a>
         </li>
+
+          <li class="nav-item {{ Request::is('tabel*') ? 'active' : '' }}">
+            <a class="nav-link" href="/tabel">
+                <span class="menu-title">Barangtables</span>
+                <i class="mdi mdi-package-variant menu-icon"></i>
+            </a>
+        </li>
+          <li class="nav-item {{ Request::is('datatables*') ? 'active' : '' }}">
+            <a class="nav-link" href="/datatables">
+                <span class="menu-title">Barangdatatables</span>
+                <i class="mdi mdi-package-variant menu-icon"></i>
+            </a>
+        </li>
+
+            {{-- Select --}}
+        <li class="nav-item {{ Request::is('select') ? 'active' : '' }}">
+            <a class="nav-link" href="/select">
+                <span class="menu-title">Select</span>
+                <i class="mdi mdi-form-dropdown menu-icon"></i>  {{-- ganti ini --}}
+            </a>
+        </li>
+
+        {{-- Select2 --}}
+        <li class="nav-item {{ Request::is('select2') ? 'active' : '' }}">
+            <a class="nav-link" href="/select2">
+                <span class="menu-title">Select2</span>
+                <i class="mdi mdi-form-dropdown menu-icon"></i>  {{-- ganti ini --}}
+            </a>
+        </li>
         
         
         <!-- Menu Edit Profile -->

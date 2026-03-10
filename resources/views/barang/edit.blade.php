@@ -12,7 +12,8 @@
 <div class="card shadow-sm" style="max-width: 600px">
     <div class="card-body p-4">
 
-        <form action="{{ route('barang.update', $barang->id_barang) }}" method="POST">
+        {{-- ✅ PERUBAHAN: tambah id="form-barang-edit" pada <form> --}}
+        <form id="form-barang-edit" action="{{ route('barang.update', $barang->id_barang) }}" method="POST">
             @csrf
             @method('PUT')
 
@@ -78,12 +79,26 @@
                 </div>
             </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-warning">💾 Simpan Perubahan</button>
-                <a href="{{ route('barang.index') }}" class="btn btn-outline-secondary">Batal</a>
-            </div>
+            {{-- ✅ PERUBAHAN: tombol submit DIHAPUS dari dalam <form> --}}
 
         </form>
+        {{-- </form> ditutup di sini --}}
+
+        {{-- ✅ PERUBAHAN: tombol submit dipindah ke LUAR <form> --}}
+        <div class="d-flex gap-2 mt-3">
+            <button type="button"
+                    class="btn btn-warning btn-submit"
+                    data-form="#form-barang-edit">
+                <span class="btn-text">
+                    💾 Simpan Perubahan
+                </span>
+                <span class="btn-loader d-none">
+                    <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                    Memproses...
+                </span>
+            </button>
+            <a href="{{ route('barang.index') }}" class="btn btn-outline-secondary">Batal</a>
+        </div>
 
     </div>
 </div>
