@@ -71,6 +71,35 @@
             </a>
         </li>
         
+  {{-- SESUDAH (benar) --}}
+<li class="nav-item {{ Request::is('ajax/wilayahajax') ? 'active' : '' }}">
+    <a class="nav-link" href="/ajax/wilayahajax">
+        <span class="menu-title">Select Wilayah (AJAX)</span>
+        <i class="mdi mdi-map-marker-radius menu-icon"></i>
+    </a>
+</li>
+<li class="nav-item {{ Request::is('axios/wilayahaxios') ? 'active' : '' }}">
+    <a class="nav-link" href="/axios/wilayahaxios">
+        <span class="menu-title">Select Wilayah (Axios)</span>
+        <i class="mdi mdi-map-marker-radius menu-icon"></i>
+    </a>
+</li>
+
+
+{{-- SESUDAH (benar) --}}
+<li class="nav-item {{ Request::is('ajax/kasirajax') ? 'active' : '' }}">
+    <a class="nav-link" href="/ajax/kasirajax">
+        <span class="menu-title">Kasir (AJAX)</span>
+        <i class="mdi mdi-cash-register menu-icon"></i>
+    </a>
+</li>
+<li class="nav-item {{ Request::is('axios/kasiraxios') ? 'active' : '' }}">
+    <a class="nav-link" href="/axios/kasiraxios">
+        <span class="menu-title">Kasir (Axios)</span>
+        <i class="mdi mdi-cash-register menu-icon"></i>
+    </a>
+</li>
+
         
         <!-- Menu Edit Profile -->
         <li class="nav-item {{ Request::is('profile*') ? 'active' : '' }}">

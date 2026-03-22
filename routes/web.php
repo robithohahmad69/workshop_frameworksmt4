@@ -137,4 +137,49 @@ Route::middleware('auth')->group(function () {
         // ✅ Dynamic routes belakangan (umum)
       
         Route::resource('barang', BarangController::class);
+
+        Route::get('/tabel',      fn() => view('datatables.tabel'));
+Route::get('/datatables', fn() => view('datatables.datatables'));
+
+     Route::get('/select',      fn() => view('select.select'));
+Route::get('/select2', fn() => view('select.select2'));
+
+Route::get('/ajax/wilayahajax',  fn() => view('ajax.wilayahajax'));
+Route::get('/axios/wilayahaxios', fn() => view('axios.wilayahaxios'));
+
+// API Wilayah
+
+// provinsi
+Route::get('/api/provinsi', function () {$response = Http::get('https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json');return $response->json();});
+
+// kota
+Route::get('/api/kota/{id}', function ($id) {$response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/$id.json");return $response->json();});
+
+// kecamatan
+Route::get('/api/kecamatan/{id}', function ($id) {$response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/$id.json");return $response->json();});
+
+// kelurahan
+Route::get('/api/kelurahan/{id}', function ($id) {$response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$id.json");return $response->json();});
+
+
+
+
+// View kasir
+Route::get('/ajax/kasirajax',  fn() => view('ajax.kasirajax'));
+Route::get('/axios/kasiraxios', fn() => view('axios.kasiraxios'));
+ 
+// Simpan transaksi (dipakai oleh keduanya)
+Route::post('/kasir/simpan', [App\Http\Controllers\KasirController::class, 'simpan']);
+ 
+ 
+// ================================================================
+// routes/web.php — route API barang per kode (tambahkan juga)
+// ================================================================
+Route::get('/api/barang/{kode}', function ($kode) {
+    $barang = DB::table('barang')->where('id_barang', $kode)->first();
+    if (!$barang) {
+        return response()->json(['message' => 'Barang tidak ditemukan'], 404);
+    }
+    return response()->json($barang);
+});
 });

@@ -1,4 +1,4 @@
-@extends('layouts.apps')
+@extends('layouts.apps ')
 
 @section('title', 'Manajemen Barang - Tabel')
 @section('icon', 'mdi mdi-package-variant')
