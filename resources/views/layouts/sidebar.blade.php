@@ -1,3 +1,13 @@
+@php
+    if (Auth::guard('vendor')->check()) {
+        $authUser = Auth::guard('vendor')->user();
+        $isVendor = true;
+    } else {
+        $authUser = Auth::user();
+        $isVendor = false;
+    }
+@endphp
+
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item nav-profile">
@@ -7,106 +17,143 @@
                     <span class="login-status online"></span>
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                    <span class="font-weight-bold mb-2">{{ Auth::user()->name }}</span>
-                    <span class="text-secondary text-small">{{ Auth::user()->email }}</span>
+                    <span class="font-weight-bold mb-2">{{ $authUser->name }}</span>
+                    <span class="text-secondary text-small">{{ $authUser->email }}</span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
             </a>
         </li>
-        
-        <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
-            <a class="nav-link" href="/">
-                <span class="menu-title">Dashboard</span>
-                <i class="mdi mdi-home menu-icon"></i>
-            </a>
-        </li>
-        
-        <li class="nav-item {{ Request::is('kategori*') ? 'active' : '' }}">
-            <a class="nav-link" href="/kategori">
-                <span class="menu-title">Kategori</span>
-                <i class="mdi mdi-tag-multiple menu-icon"></i>
-            </a>
-        </li>
-        
-        <li class="nav-item {{ Request::is('buku*') ? 'active' : '' }}">
-            <a class="nav-link" href="/buku">
-                <span class="menu-title">Buku</span>
-                <i class="mdi mdi-book-open-variant menu-icon"></i>
-            </a>
-        </li>
 
-         <li class="nav-item {{ Request::is('barang*') ? 'active' : '' }}">
-            <a class="nav-link" href="/barang">
-                <span class="menu-title">Barang</span>
-                <i class="mdi mdi-package-variant menu-icon"></i>
-            </a>
-        </li>
+        @if($isVendor)
+            {{-- ===== MENU VENDOR ===== --}}
+            <li class="nav-item {{ Request::is('vendor/dashboard') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('vendor.dashboard') }}">
+                    <span class="menu-title">Dashboard</span>
+                    <i class="mdi mdi-home menu-icon"></i>
+                </a>
+            </li>
 
-          <li class="nav-item {{ Request::is('tabel*') ? 'active' : '' }}">
-            <a class="nav-link" href="/tabel">
-                <span class="menu-title">Barangtables</span>
-                <i class="mdi mdi-package-variant menu-icon"></i>
-            </a>
-        </li>
-          <li class="nav-item {{ Request::is('datatables*') ? 'active' : '' }}">
-            <a class="nav-link" href="/datatables">
-                <span class="menu-title">Barangdatatables</span>
-                <i class="mdi mdi-package-variant menu-icon"></i>
-            </a>
-        </li>
+            <li class="nav-item {{ Request::is('vendor/menu*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('vendor.menu.index') }}">
+                    <span class="menu-title">Kelola Menu</span>
+                    <i class="mdi mdi-food menu-icon"></i>
+                </a>
+            </li>
 
-            {{-- Select --}}
-        <li class="nav-item {{ Request::is('select') ? 'active' : '' }}">
-            <a class="nav-link" href="/select">
-                <span class="menu-title">Select</span>
-                <i class="mdi mdi-form-dropdown menu-icon"></i>  {{-- ganti ini --}}
-            </a>
-        </li>
+            <li class="nav-item {{ Request::is('vendor/orders*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('vendor.orders.index') }}">
+                    <span class="menu-title">Pesanan Masuk</span>
+                    <i class="mdi mdi-receipt menu-icon"></i>
+                </a>
+            </li>
 
-        {{-- Select2 --}}
-        <li class="nav-item {{ Request::is('select2') ? 'active' : '' }}">
-            <a class="nav-link" href="/select2">
-                <span class="menu-title">Select2</span>
-                <i class="mdi mdi-form-dropdown menu-icon"></i>  {{-- ganti ini --}}
-            </a>
-        </li>
-        
-  {{-- SESUDAH (benar) --}}
-<li class="nav-item {{ Request::is('ajax/wilayahajax') ? 'active' : '' }}">
-    <a class="nav-link" href="/ajax/wilayahajax">
-        <span class="menu-title">Select Wilayah (AJAX)</span>
-        <i class="mdi mdi-map-marker-radius menu-icon"></i>
-    </a>
-</li>
-<li class="nav-item {{ Request::is('axios/wilayahaxios') ? 'active' : '' }}">
-    <a class="nav-link" href="/axios/wilayahaxios">
-        <span class="menu-title">Select Wilayah (Axios)</span>
-        <i class="mdi mdi-map-marker-radius menu-icon"></i>
-    </a>
-</li>
+            <li class="nav-item {{ Request::is('vendor/pesanan*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('vendor.pesanan.index') }}">
+                    <span class="menu-title">Riwayat Pesanan</span>
+                    <i class="mdi mdi-history menu-icon"></i>
+                </a>
+            </li>
 
+            <li class="nav-item {{ Request::is('vendor/profile*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('vendor.profile') }}">
+                    <span class="menu-title">Edit Profile</span>
+                    <i class="mdi mdi-account-circle menu-icon"></i>
+                </a>
+            </li>
 
-{{-- SESUDAH (benar) --}}
-<li class="nav-item {{ Request::is('ajax/kasirajax') ? 'active' : '' }}">
-    <a class="nav-link" href="/ajax/kasirajax">
-        <span class="menu-title">Kasir (AJAX)</span>
-        <i class="mdi mdi-cash-register menu-icon"></i>
-    </a>
-</li>
-<li class="nav-item {{ Request::is('axios/kasiraxios') ? 'active' : '' }}">
-    <a class="nav-link" href="/axios/kasiraxios">
-        <span class="menu-title">Kasir (Axios)</span>
-        <i class="mdi mdi-cash-register menu-icon"></i>
-    </a>
-</li>
+        @else
+            {{-- ===== MENU USER BIASA ===== --}}
+            <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
+                <a class="nav-link" href="/">
+                    <span class="menu-title">Dashboard</span>
+                    <i class="mdi mdi-home menu-icon"></i>
+                </a>
+            </li>
 
-        
-        <!-- Menu Edit Profile -->
-        <li class="nav-item {{ Request::is('profile*') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('profile.edit') }}">
-                <span class="menu-title">Edit Profile</span>
-                <i class="mdi mdi-account-circle menu-icon"></i>
-            </a>
-        </li>
+            <li class="nav-item {{ Request::is('kategori*') ? 'active' : '' }}">
+                <a class="nav-link" href="/kategori">
+                    <span class="menu-title">Kategori</span>
+                    <i class="mdi mdi-tag-multiple menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('buku*') ? 'active' : '' }}">
+                <a class="nav-link" href="/buku">
+                    <span class="menu-title">Buku</span>
+                    <i class="mdi mdi-book-open-variant menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('barang*') ? 'active' : '' }}">
+                <a class="nav-link" href="/barang">
+                    <span class="menu-title">Barang</span>
+                    <i class="mdi mdi-package-variant menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('tabel*') ? 'active' : '' }}">
+                <a class="nav-link" href="/tabel">
+                    <span class="menu-title">Barangtables</span>
+                    <i class="mdi mdi-package-variant menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('datatables*') ? 'active' : '' }}">
+                <a class="nav-link" href="/datatables">
+                    <span class="menu-title">Barangdatatables</span>
+                    <i class="mdi mdi-package-variant menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('select') ? 'active' : '' }}">
+                <a class="nav-link" href="/select">
+                    <span class="menu-title">Select</span>
+                    <i class="mdi mdi-form-dropdown menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('select2') ? 'active' : '' }}">
+                <a class="nav-link" href="/select2">
+                    <span class="menu-title">Select2</span>
+                    <i class="mdi mdi-form-dropdown menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('ajax/wilayahajax') ? 'active' : '' }}">
+                <a class="nav-link" href="/ajax/wilayahajax">
+                    <span class="menu-title">Select Wilayah (AJAX)</span>
+                    <i class="mdi mdi-map-marker-radius menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('axios/wilayahaxios') ? 'active' : '' }}">
+                <a class="nav-link" href="/axios/wilayahaxios">
+                    <span class="menu-title">Select Wilayah (Axios)</span>
+                    <i class="mdi mdi-map-marker-radius menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('ajax/kasirajax') ? 'active' : '' }}">
+                <a class="nav-link" href="/ajax/kasirajax">
+                    <span class="menu-title">Kasir (AJAX)</span>
+                    <i class="mdi mdi-cash-register menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('axios/kasiraxios') ? 'active' : '' }}">
+                <a class="nav-link" href="/axios/kasiraxios">
+                    <span class="menu-title">Kasir (Axios)</span>
+                    <i class="mdi mdi-cash-register menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('profile*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('profile.edit') }}">
+                    <span class="menu-title">Edit Profile</span>
+                    <i class="mdi mdi-account-circle menu-icon"></i>
+                </a>
+            </li>
+        @endif
+
     </ul>
 </nav>

@@ -69,6 +69,11 @@
             <img src="https://www.google.com/favicon.ico" alt="Google">
             Login dengan Google
         </a>
+        <div class="divider">atau</div>
+        <a href="{{ route('vendor.login') }}" class="btn-google">
+            <img src="https://www.google.com/favicon.ico" alt="Vendor">
+            Login sebagai Vendor
+        </a>
 
         <div class="links">
             Belum punya akun? <a href="{{ route('register') }}">Daftar disini</a>
