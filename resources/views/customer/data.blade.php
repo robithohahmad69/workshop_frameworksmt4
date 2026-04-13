@@ -26,6 +26,125 @@
         .badge-file { background: #d1e7dd; color: #0f5132; }
         .empty { text-align: center; color: #aaa; padding: 40px; }
         .no-foto { color: #ccc; font-size: 12px; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 92%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .modal-close {
+            background: #f5576c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close:hover {
+            background: #e6496e;
+        }
+        .modal-body {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 16px;
+        }
+        .modal-foto {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #eee;
+        }
+        .modal-foto-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 12px;
+            border: 2px dashed #ddd;
+        }
+        .modal-info {
+            display: grid;
+            gap: 8px;
+        }
+        .modal-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-label {
+            font-size: 11px;
+            color: #888;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .modal-value {
+            font-size: 14px;
+            color: #333;
+        }
+        .modal-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .modal-badge-blob {
+            background: #cfe2ff;
+            color: #084298;
+        }
+        .modal-badge-file {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        /* Table row hover effect */
+        tbody tr {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        tbody tr:hover {
+            background: #fff5f7;
+        }
     </style>
 </head>
 <body>
@@ -63,7 +182,16 @@
             </thead>
             <tbody>
                 @forelse($customers as $c)
-                <tr>
+                <tr onclick="showCustomerModal({{ $c->id }})"
+                    data-id="{{ $c->id }}"
+                    data-nama="{{ $c->nama }}"
+                    data-alamat="{{ $c->alamat ?? '' }}"
+                    data-kota="{{ $c->kota ?? '' }}"
+                    data-provinsi="{{ $c->provinsi ?? '' }}"
+                    data-kecamatan="{{ $c->kecamatan ?? '' }}"
+                    data-kelurahan="{{ $c->kodepos_kelurahan ?? '' }}"
+                    data-foto-blob="{{ $c->foto_blob ?? '' }}"
+                    data-foto-path="{{ $c->foto_path ?? '' }}">
                     <td>{{ $loop->iteration }}</td>
                     <td>
                         @if($c->foto_blob)
@@ -95,5 +223,113 @@
             </tbody>
         </table>
     </div>
+
+    {{-- Modal Detail Customer --}}
+    <div class="modal-overlay" id="customerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>👤 Detail Customer</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="modal-foto-placeholder" id="modalFoto">
+                        <span>No Foto</span>
+                    </div>
+                </div>
+                <div class="modal-info">
+                    <div class="modal-info-item">
+                        <span class="modal-label">Nama Lengkap</span>
+                        <span class="modal-value" id="modalNama">—</span>
+                    </div>
+                    <div class="modal-info-item">
+                        <span class="modal-label">Alamat Lengkap</span>
+                        <span class="modal-value" id="modalAlamat">—</span>
+                    </div>
+                    <div class="modal-info-item">
+                        <span class="modal-label">Provinsi</span>
+                        <span class="modal-value" id="modalProvinsi">—</span>
+                    </div>
+                    <div class="modal-info-item">
+                        <span class="modal-label">Kota/Kabupaten</span>
+                        <span class="modal-value" id="modalKota">—</span>
+                    </div>
+                    <div class="modal-info-item">
+                        <span class="modal-label">Kecamatan</span>
+                        <span class="modal-value" id="modalKecamatan">—</span>
+                    </div>
+                    <div class="modal-info-item">
+                        <span class="modal-label">Kelurahan</span>
+                        <span class="modal-value" id="modalKelurahan">—</span>
+                    </div>
+                    <div class="modal-info-item">
+                        <span class="modal-label">Tipe Foto</span>
+                        <span id="modalTipeFoto">—</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showCustomerModal(customerId) {
+            const row = document.querySelector(`tr[data-id="${customerId}"]`);
+            if (!row) return;
+
+            // Ambil data dari atribut data
+            const nama = row.dataset.nama;
+            const alamat = row.dataset.alamat;
+            const kota = row.dataset.kota;
+            const provinsi = row.dataset.provinsi;
+            const kecamatan = row.dataset.kecamatan;
+            const kelurahan = row.dataset.kelurahan;
+            const fotoBlob = row.dataset.fotoBlob;
+            const fotoPath = row.dataset.fotoPath;
+
+            // Isi modal dengan data
+            document.getElementById('modalNama').textContent = nama || '—';
+            document.getElementById('modalAlamat').textContent = alamat || '—';
+            document.getElementById('modalProvinsi').textContent = provinsi || '—';
+            document.getElementById('modalKota').textContent = kota || '—';
+            document.getElementById('modalKecamatan').textContent = kecamatan || '—';
+            document.getElementById('modalKelurahan').textContent = kelurahan || '—';
+
+            // Handle foto
+            const fotoContainer = document.getElementById('modalFoto');
+            const tipeFotoContainer = document.getElementById('modalTipeFoto');
+
+            if (fotoBlob) {
+                fotoContainer.innerHTML = `<img src="data:image/png;base64,${fotoBlob}" class="modal-foto" alt="foto">`;
+                tipeFotoContainer.innerHTML = '<span class="modal-badge modal-badge-blob">BLOB</span>';
+            } else if (fotoPath) {
+                fotoContainer.innerHTML = `<img src="${window.location.origin}/storage/${fotoPath}" class="modal-foto" alt="foto">`;
+                tipeFotoContainer.innerHTML = '<span class="modal-badge modal-badge-file">File</span>';
+            } else {
+                fotoContainer.innerHTML = '<div class="modal-foto-placeholder"><span>No Foto</span></div>';
+                tipeFotoContainer.textContent = '—';
+            }
+
+            // Tampilkan modal
+            document.getElementById('customerModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('customerModal').classList.remove('active');
+        }
+
+        // Tutup modal saat klik di luar modal
+        document.getElementById('customerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Tutup modal dengan tombol ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>

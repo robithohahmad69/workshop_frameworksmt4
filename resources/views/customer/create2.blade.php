@@ -24,6 +24,25 @@
         .btn-save { background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; }
         .loading { display: none; color: #999; font-size: 12px; margin-left: 10px; }
         select:disabled { background-color: #f5f5f5; cursor: not-allowed; }
+        .d-none { display: none !important; }
+        .spinner-border {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border 0.75s linear infinite;
+        }
+        .spinner-border-sm {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-width: 0.125em;
+        }
+        .me-1 { margin-right: 0.25rem; }
+        @keyframes spinner-border {
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -35,7 +54,7 @@
         <a href="{{ route('customer-data.index') }}" class="btn-back">← Kembali ke Data Customer</a>
 
         <div class="card">
-            <form method="POST" action="{{ route('customer-data.store-file') }}">
+            <form method="POST" action="{{ route('customer-data.store-file') }}" id="formCustomerFile">
                 @csrf
                 <input type="hidden" name="foto" id="fotoBase64">
 
@@ -89,7 +108,13 @@
                     </div>
                     <div class="btn-row">
                         <button type="button" class="btn btn-camera" onclick="bukaModal()">📷 Ambil Foto</button>
-                        <button type="submit" class="btn btn-save">💾 Simpan Data</button>
+                        <button type="button" class="btn btn-save btn-submit" data-form="#formCustomerFile">
+                            <span class="btn-text">💾 Simpan Data</span>
+                            <span class="btn-loader d-none">
+                                <span class="spinner-border spinner-border-sm me-1"></span>
+                                Memproses...
+                            </span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -127,7 +152,8 @@
         </div>
     </div>
 
-<script>
+    <script src="{{ asset('assets/js/form-handler.js') }}"></script>
+    <script>
     let stream = null;
     let devices = [];
 
