@@ -51,11 +51,18 @@
         </form>
 
         <div class="divider">atau</div>
+        <a href="{{ route('login') }}" class="btn-guest">
+            🛠️ Login sebagai admin
+        </a>
 
         {{-- Tombol langsung ke halaman order customer --}}
         <a href="{{ route('customer.index') }}" class="btn-guest">
-            🛒 Pesan Makanan (Customer)
+            🛒 Pesan Makanan 
         </a>
+         <a href="{{ route('customer-data.index') }}" class="btn-guest">
+            👤 Data Customer
+        </a>
+
 
         <div class="links">
             Belum punya akun vendor? <a href="{{ route('vendor.register') }}">Daftar disini</a>
