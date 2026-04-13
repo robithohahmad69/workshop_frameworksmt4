@@ -25,6 +25,7 @@ use App\Http\Controllers\Vendor\MenuController;
 use App\Http\Controllers\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Vendor\PesananController;
+use App\Http\Controllers\Customer\CustomerController;
 
 
 // ========================================
@@ -78,6 +79,27 @@ Route::post('/logout',
     [LoginController::class, 'logout'])
     ->name('logout')
     ->middleware('auth');
+
+
+// ========================================
+// API WILAYAH (PUBLIC - Tanpa Auth)
+// ========================================
+Route::get('/api/provinsi', function () {
+    $response = Http::get('https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json');
+    return $response->json();
+});
+Route::get('/api/kota/{id}', function ($id) {
+    $response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/$id.json");
+    return $response->json();
+});
+Route::get('/api/kecamatan/{id}', function ($id) {
+    $response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/$id.json");
+    return $response->json();
+});
+Route::get('/api/kelurahan/{id}', function ($id) {
+    $response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$id.json");
+    return $response->json();
+});
 
 
 // ========================================
@@ -136,24 +158,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/select2',     fn() => view('select.select2'));
     Route::get('/ajax/wilayahajax',   fn() => view('ajax.wilayahajax'));
     Route::get('/axios/wilayahaxios', fn() => view('axios.wilayahaxios'));
-
-    // API Wilayah
-    Route::get('/api/provinsi', function () {
-        $response = Http::get('https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json');
-        return $response->json();
-    });
-    Route::get('/api/kota/{id}', function ($id) {
-        $response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/$id.json");
-        return $response->json();
-    });
-    Route::get('/api/kecamatan/{id}', function ($id) {
-        $response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/$id.json");
-        return $response->json();
-    });
-    Route::get('/api/kelurahan/{id}', function ($id) {
-        $response = Http::get("https://emsifa.github.io/api-wilayah-indonesia/api/villages/$id.json");
-        return $response->json();
-    });
 
     // Kasir
     Route::get('/ajax/kasirajax',    fn() => view('ajax.kasirajax'));
@@ -261,3 +265,14 @@ Route::post('/debug/simulate-webhook/{orderId}', function ($orderId) {
         'status_bayar'     => 'lunas',
     ]);
 })->name('debug.simulate-webhook');
+
+  // ========================================
+  // CUSTOMER DATA ROUTES
+  // ========================================
+  Route::prefix('customer-data')->name('customer-data.')->group(function () {
+      Route::get('/', [App\Http\Controllers\Customer\CustomerController::class, 'index'])->name('index');
+      Route::get('/create-blob', [App\Http\Controllers\Customer\CustomerController::class, 'createBlob'])->name('create-blob');
+      Route::post('/store-blob', [App\Http\Controllers\Customer\CustomerController::class, 'storeBlob'])->name('store-blob');
+      Route::get('/create-file', [App\Http\Controllers\Customer\CustomerController::class, 'createFile'])->name('create-file');
+      Route::post('/store-file', [App\Http\Controllers\Customer\CustomerController::class, 'storeFile'])->name('store-file');
+  });
