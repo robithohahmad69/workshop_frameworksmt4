@@ -26287,3 +26287,22 @@ dl li {
   flex-grow: 1;
 }
 /*# sourceMappingURL=maps/style.css.map */
+
+/* Sidebar Category Style */
+.nav-category {
+    padding: 10px 20px;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.nav-category .nav-link {
+    color: white !important;
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: default;
+}

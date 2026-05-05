@@ -152,6 +152,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/barang/pdf', [BarangController::class, 'cetakPdf'])->name('barang.pdf');
     Route::resource('barang', BarangController::class);
 
+    // API Barcode Scanner - Praktikum 1
+    Route::post('/api/barang/scan', [BarangController::class, 'getBarangByBarcode'])->name('api.barang.scan');
+
     Route::get('/tabel',       fn() => view('datatables.tabel'));
     Route::get('/datatables',  fn() => view('datatables.datatables'));
     Route::get('/select',      fn() => view('select.select'));
@@ -195,6 +198,12 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::resource('menu', MenuController::class);
         Route::get('/pesanan',    [PesananController::class, 'index'])->name('pesanan.index');
 
+        // QR Code Scanner untuk Vendor
+        Route::get('/qr-scanner', [VendorOrderController::class, 'showQrScanner'])->name('qrScanner');
+
+        // API untuk lookup pesanan via QR Code
+        Route::post('/api/get-order', [VendorOrderController::class, 'getOrderQr'])->name('api.getOrder');
+
         // Vendor Orders Management
         // PENTING: route /{order} yang pakai wildcard harus paling bawah
         // supaya tidak "menelan" route /filter
@@ -219,6 +228,26 @@ Route::prefix('order')->name('customer.')->group(function () {
     Route::get('/payment/{orderId}',     [OrderController::class, 'payment'])->name('payment');
     Route::get('/success/{orderId}',     [OrderController::class, 'success'])->name('success');
 });
+
+// Halaman QR Code persisten untuk customer (bisa diakses kapan saja)
+Route::get('/qr-customer/{orderId}', [OrderController::class, 'qrCustomer'])->name('customer.qr');
+
+// Dokumentasi Praktikum
+Route::get('/docs/praktikum-1', function() {
+    $content = file_get_contents(base_path('PRAKTIKUM_1_BARCODE_SCANNER.md'));
+    return view('docs.markdown', [
+        'title' => 'Praktikum 1 - Barcode Scanner',
+        'content' => $content
+    ]);
+})->name('docs.praktikum1');
+
+Route::get('/docs/praktikum-2', function() {
+    $content = file_get_contents(base_path('BARCODE_QR_IMPLEMENTATION.md'));
+    return view('docs.markdown', [
+        'title' => 'Praktikum 2 - QR Code Implementation',
+        'content' => $content
+    ]);
+})->name('docs.praktikum2');
 
 
 // ========================================

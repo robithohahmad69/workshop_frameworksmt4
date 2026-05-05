@@ -54,6 +54,14 @@
                 </a>
             </li>
 
+            {{-- PRAKTIKUM 2: QR Code Scanner (VENDOR) --}}
+            <li class="nav-item {{ Request::is('vendor/qr-scanner') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('vendor.qrScanner') }}" target="_blank">
+                    <span class="menu-title">QR Scanner</span>
+                    <i class="mdi mdi-qrcode-scan menu-icon"></i>
+                </a>
+            </li>
+
             <li class="nav-item {{ Request::is('vendor/profile*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('vendor.profile') }}">
                     <span class="menu-title">Edit Profile</span>
@@ -62,7 +70,7 @@
             </li>
 
         @else
-            {{-- ===== MENU USER BIASA ===== --}}
+            {{-- ===== MENU USER BIASA (ADMIN) ===== --}}
             <li class="nav-item {{ Request::is('/') ? 'active' : '' }}">
                 <a class="nav-link" href="/">
                     <span class="menu-title">Dashboard</span>
@@ -144,6 +152,15 @@
                 <a class="nav-link" href="/axios/kasiraxios">
                     <span class="menu-title">Kasir (Axios)</span>
                     <i class="mdi mdi-cash-register menu-icon"></i>
+                </a>
+            </li>
+
+            {{-- PRAKTIKUM 1: Barcode Scanner (Tombol di halaman Barang) --}}
+            {{-- PRAKTIKUM 2: Kantin System (CUSTOMER) --}}
+            <li class="nav-item {{ Request::is('order*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('customer.index') }}">
+                    <span class="menu-title">Pesan Menu</span>
+                    <i class="mdi mdi-food menu-icon"></i>
                 </a>
             </li>
 

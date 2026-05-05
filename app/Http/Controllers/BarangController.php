@@ -7,30 +7,17 @@ use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    // ============================================================
-    // INDEX - Tampilkan semua data (Datatables)
-    // URL: GET /barang
-    // ============================================================
     public function index()
     {
         $barang = Barang::all();
         return view('barang.index', compact('barang'));
     }
 
-    // ============================================================
-    // CREATE - Tampilkan form tambah
-    // URL: GET /barang/create
-    // ============================================================
     public function create()
     {
         return view('barang.create');
     }
 
-    // ============================================================
-    // STORE - Proses simpan data baru
-    // URL: POST /barang
-    // id_barang tidak dikirim → dihandle trigger database
-    // ============================================================
     public function store(Request $request)
     {
         $request->validate([
@@ -54,28 +41,16 @@ class BarangController extends Controller
                          ->with('success', 'Barang berhasil ditambahkan!');
     }
 
-    // ============================================================
-    // SHOW - Tampilkan detail satu barang
-    // URL: GET /barang/{id}
-    // ============================================================
     public function show(Barang $barang)
     {
         return view('barang.show', compact('barang'));
     }
 
-    // ============================================================
-    // EDIT - Tampilkan form edit
-    // URL: GET /barang/{id}/edit
-    // ============================================================
     public function edit(Barang $barang)
     {
         return view('barang.edit', compact('barang'));
     }
 
-    // ============================================================
-    // UPDATE - Proses simpan perubahan
-    // URL: PUT /barang/{id}
-    // ============================================================
     public function update(Request $request, Barang $barang)
     {
         $request->validate([
@@ -97,10 +72,6 @@ class BarangController extends Controller
                          ->with('success', 'Barang berhasil diperbarui!');
     }
 
-    // ============================================================
-    // DESTROY - Hapus data
-    // URL: DELETE /barang/{id}
-    // ============================================================
     public function destroy(Barang $barang)
     {
         $barang->delete();
@@ -109,10 +80,6 @@ class BarangController extends Controller
                          ->with('success', 'Barang berhasil dihapus!');
     }
 
-    // ============================================================
-    // CETAK PDF - Generate label harga
-    // URL: POST /barang/cetak-pdf
-    // ============================================================
     public function cetakPdf(Request $request)
     {
         $request->validate([
@@ -126,16 +93,57 @@ class BarangController extends Controller
 
         $barangs = Barang::whereIn('id_barang', $request->selected_ids)->get();
 
-        // Rumus: (Y-1)*5 + (X-1) → hitung berapa label yang dilewati
         $startIndex = (($request->start_y - 1) * 5) + ($request->start_x - 1);
+
+        // Generate barcode untuk setiap barang
+        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+        $barcodes  = [];
+        foreach ($barangs as $b) {
+            $png = $generator->getBarcode(
+                (string) $b->id_barang,
+                $generator::TYPE_CODE_128
+            );
+            $barcodes[$b->id_barang] = 'data:image/png;base64,' . base64_encode($png);
+        }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('barang.pdf', [
             'barangs'    => $barangs,
             'startIndex' => $startIndex,
+            'barcodes'   => $barcodes,
         ]);
 
         $pdf->setPaper('A4', 'portrait');
 
         return $pdf->stream('label-harga.pdf');
+    }
+
+    /**
+     * API untuk mendapatkan data barang berdasarkan barcode scan
+     * Dipanggil oleh modal scanner via AJAX/Fetch
+     * Praktikum 1 - Barcode Scanner
+     */
+    public function getBarangByBarcode(Request $request)
+    {
+        $request->validate([
+            'barcode' => 'required|string'
+        ]);
+
+        $barang = Barang::where('id_barang', $request->barcode)->first();
+
+        if (!$barang) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Barang dengan barcode tersebut tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id_barang' => $barang->id_barang,
+                'nama'      => $barang->nama,
+                'harga'     => $barang->harga
+            ]
+        ]);
     }
 }

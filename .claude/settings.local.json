@@ -1,7 +1,20 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan:*)"
+      "Bash(php artisan:*)",
+      "Bash(grep -E \"\\\\.php$\")",
+      "Bash(grep -r \"Schema::create\\\\|Schema::table\" database/migrations/*.php)",
+      "Bash(ls:*)",
+      "Bash(curl -s http://127.0.0.1:8000/api/provinsi)",
+      "Bash(curl -s http://127.0.0.1:8000/customer-data/create-blob)",
+      "Bash(curl -s \"http://127.0.0.1:8000/api/kota/11\")",
+      "Bash(curl -s http://127.0.0.1:8000/customer-data)",
+      "Bash(grep:*)",
+      "Bash(curl -s http://127.0.0.1:8000/__TRACKED_VAR__)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(curl -s https://drinking-caution-crazy.ngrok-free.dev/midtrans/webhook -X POST -H \"Content-Type: application/json\" -d '{\"test\":\"true\"}')"
     ]
   }
 }

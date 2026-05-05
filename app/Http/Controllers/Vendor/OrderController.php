@@ -13,6 +13,21 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     /**
+     * Tampilkan halaman QR Code Scanner untuk Vendor
+     */
+    public function showQrScanner()
+    {
+        $vendor = auth()->guard('vendor')->user();
+
+        if (!$vendor) {
+            return redirect()->route('vendor.login')
+                ->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        return view('vendor.qr-scanner');
+    }
+
+    /**
      * Tampilkan daftar semua pesanan untuk vendor ini
      */
     public function index()
@@ -132,5 +147,69 @@ class OrderController extends Controller
         $orders = $query->latest()->get();
 
         return view('vendor.orders.index', compact('orders', 'status'));
+    }
+
+    /**
+     * API untuk lookup pesanan via QR Code scan
+     * Dipanggil oleh vendor QR scanner
+     */
+    public function getOrderQr(Request $request)
+    {
+        $vendor = auth()->guard('vendor')->user();
+
+        if (!$vendor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vendor tidak terautentikasi'
+            ], 401);
+        }
+
+        $request->validate([
+            'order_id' => 'required|integer|exists:orders,id'
+        ]);
+
+        $order = Order::with(['orderItems.menu', 'payment', 'vendor'])
+                      ->where('id', $request->order_id)
+                      ->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pesanan tidak ditemukan'
+            ], 404);
+        }
+
+        // Verifikasi bahwa pesanan milik vendor yang login
+        if ($order->vendor_id !== $vendor->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pesanan ini bukan dari vendor Anda'
+            ], 403);
+        }
+
+        // Format response dengan menu items untuk vendor ini
+        $menuItems = [];
+        foreach ($order->orderItems as $item) {
+            $menuItems[] = [
+                'menu_nama' => $item->menu->nama,
+                'qty'       => $item->qty,
+                'harga'     => $item->harga,
+                'subtotal'  => $item->qty * $item->harga
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'order_id'       => $order->id,
+                'customer_name'  => $order->customer_name,
+                'vendor_name'    => $order->vendor->name,
+                'total'          => $order->total,
+                'status_bayar'   => $order->status_bayar,
+                'status'         => $order->status ?? 'pending',
+                'created_at'     => $order->created_at->format('d M Y H:i'),
+                'menu_items'     => $menuItems
+            ]
+        ]);
     }
 }

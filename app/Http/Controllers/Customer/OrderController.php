@@ -9,6 +9,11 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Midtrans\Snap;
+use Midtrans\Transaction;
+use Midtrans\Config;
+
+
 
 class OrderController extends Controller
 {
@@ -51,7 +56,6 @@ class OrderController extends Controller
         foreach ($request->items as $item) {
             $menu = Menu::findOrFail($item['id']);
 
-            // Pastikan menu milik vendor yang dipilih
             abort_if($menu->vendor_id != $vendorId, 403);
 
             $subtotal = $menu->harga * $item['qty'];
@@ -100,7 +104,6 @@ class OrderController extends Controller
         $order     = Order::with(['orderItems.menu', 'payment'])->findOrFail($orderId);
         $snapToken = $this->getMidtransToken($order);
 
-        // Simpan snap token
         $order->payment->update(['snap_token' => $snapToken]);
 
         return view('customer.payment', compact('order', 'snapToken'));
@@ -149,7 +152,6 @@ class OrderController extends Controller
             $serverKey
         );
 
-        // Validasi signature
         if ($hashedKey !== $request->signature_key) {
             \Log::error('Midtrans webhook: Invalid signature', [
                 'order_id'   => $request->order_id,
@@ -172,15 +174,13 @@ class OrderController extends Controller
             'status_code'        => $request->status_code,
         ]);
 
-        // Update status payment
         $payment->update(['status' => $request->transaction_status]);
 
-        // Kalau sudah bayar, update order jadi lunas
         if (in_array($request->transaction_status, ['settlement', 'capture'])) {
             $payment->order->update(['status_bayar' => 'lunas']);
 
             \Log::info('Order marked as paid', [
-                'order_id'    => $payment->order->id,
+                'order_id'     => $payment->order->id,
                 'status_bayar' => 'lunas',
             ]);
         }
@@ -188,23 +188,19 @@ class OrderController extends Controller
         return response()->json(['message' => 'OK']);
     }
 
-    // Halaman sukses — dengan fix cek langsung ke Midtrans API
+    // Halaman sukses
     public function success($orderId)
     {
         $order = Order::with(['orderItems.menu', 'payment'])->findOrFail($orderId);
 
-        // Jika status masih pending, cek langsung ke Midtrans API
         if ($order->status_bayar === 'pending' && $order->payment) {
 
-            // Setup Midtrans config
             \Midtrans\Config::$serverKey    = config('midtrans.server_key');
             \Midtrans\Config::$isProduction = config('midtrans.is_production');
 
             try {
-                // Tanya status transaksi langsung ke Midtrans
                 $status = \Midtrans\Transaction::status($order->payment->midtrans_order_id);
 
-                // Kalau sudah settlement atau capture = sudah bayar
                 if (in_array($status->transaction_status, ['settlement', 'capture'])) {
                     $order->update(['status_bayar' => 'lunas']);
                     $order->payment->update(['status' => $status->transaction_status]);
@@ -214,11 +210,9 @@ class OrderController extends Controller
                         'transaction_status' => $status->transaction_status,
                     ]);
 
-                    // Refresh data order setelah update
                     $order->refresh();
                 }
             } catch (\Exception $e) {
-                // Fallback: cek dari kolom payment->status yang ada di DB
                 if (in_array($order->payment->status, ['settlement', 'capture'])) {
                     $order->update(['status_bayar' => 'lunas']);
                     $order->refresh();
@@ -230,6 +224,36 @@ class OrderController extends Controller
             }
         }
 
-        return view('customer.success', compact('order'));
+// Generate QR Code berisi id pesanan
+$renderer = new \BaconQrCode\Renderer\ImageRenderer(
+    new \BaconQrCode\Renderer\RendererStyle\RendererStyle(200),
+    new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
+);
+$writer   = new \BaconQrCode\Writer($renderer);
+$qrSvg    = $writer->writeString((string) $order->id);
+$qrBase64 = 'data:image/svg+xml;base64,' . base64_encode($qrSvg);
+
+
+        return view('customer.success', compact('order', 'qrBase64'));
+    }
+
+    /**
+     * Halaman QR Code persisten untuk customer
+     * Bisa diakses kapan saja, bahkan setelah menutup browser
+     */
+    public function qrCustomer($orderId)
+    {
+        $order = Order::with(['orderItems.menu', 'payment', 'vendor'])->findOrFail($orderId);
+
+        // Generate QR Code berisi id pesanan
+        $renderer = new \BaconQrCode\Renderer\ImageRenderer(
+            new \BaconQrCode\Renderer\RendererStyle\RendererStyle(300),
+            new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
+        );
+        $writer   = new \BaconQrCode\Writer($renderer);
+        $qrSvg    = $writer->writeString((string) $order->id);
+        $qrBase64 = 'data:image/svg+xml;base64,' . base64_encode($qrSvg);
+
+        return view('customer.qr-persistent', compact('order', 'qrBase64'));
     }
 }

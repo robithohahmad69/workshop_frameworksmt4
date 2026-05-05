@@ -18,12 +18,15 @@
         .item-row { font-size: 13px; color: #555; padding: 4px 0; display: flex; justify-content: space-between; }
         .badge-lunas { background: #d4edda; color: #155724; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         .btn { display: inline-block; padding: 12px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; }
-        .btn-print { background: #6c757d; margin-right: 10px; }
+        .btn-print { background: #6c757d; margin-right: 0; }
         .btn-print:hover { background: #5a6268; }
-        .buttons-wrapper { display: flex; gap: 10px; margin-top: 16px; }
-        .buttons-wrapper .btn { flex: 1; text-align: center; }
+        .buttons-wrapper { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        .buttons-wrapper .btn { flex: 1; text-align: center; min-width: 120px; }
+        .qr-wrapper { margin: 0 0 24px 0; padding: 20px 16px; background: #f9f9f9; border-radius: 8px; }
+        .qr-wrapper img { width: 180px; height: 180px; }
+        .qr-wrapper .qr-label { font-size: 12px; color: #888; margin-top: 10px; }
+        .qr-wrapper .qr-id { font-size: 13px; font-weight: bold; color: #333; margin-top: 4px; }
 
-        /* Print Styles */
         @media print {
             body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .box { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
@@ -37,7 +40,6 @@
                 color: #666;
                 font-style: italic;
             }
-            .icon { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -74,10 +76,22 @@
             </div>
         </div>
 
+        {{-- QR Code hanya muncul kalau sudah lunas --}}
+        @if($order->status_bayar === 'lunas')
+        <div class="qr-wrapper">
+            <img src="{{ $qrBase64 }}" alt="QR Code Pesanan #{{ $order->id }}">
+            <div class="qr-label">Tunjukkan QR Code ini ke vendor</div>
+            <div class="qr-id">ID Pesanan: #{{ $order->id }}</div>
+        </div>
+        @endif
+
         <div class="buttons-wrapper">
             <button onclick="window.print()" class="btn btn-print">
                 🖨️ Cetak Invoice
             </button>
+            <a href="{{ route('customer.qr', $order->id) }}" class="btn" target="_blank">
+                📱 Buka QR Code
+            </a>
             <a href="{{ route('customer.index') }}" class="btn">Pesan Lagi</a>
         </div>
     </div>

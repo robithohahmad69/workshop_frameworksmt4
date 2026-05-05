@@ -25,7 +25,7 @@
 
     table.label-table td {
         width: 38mm;
-        height: 18mm;
+        height: 25mm;
         border: 0px solid #000;
         text-align: center;
         vertical-align: middle;
@@ -50,6 +50,13 @@
         font-weight: bold;
         color: #000;
         line-height: 1.2;
+    }
+
+    .label-barcode img {
+        width: 34mm;
+        height: 8mm;
+        display: block;
+        margin: 0 auto;
     }
 
     .label-id {
@@ -86,6 +93,9 @@
                 <div class="label-isi">
                     <div class="label-nama">{{ $slot->nama }}</div>
                     <div class="label-harga">Rp {{ number_format($slot->harga, 0, ',', '.') }}</div>
+                    <div class="label-barcode">
+                        <img src="{{ $barcodes[$slot->id_barang] }}">
+                    </div>
                     <div class="label-id">{{ $slot->id_barang }}</div>
                 </div>
             @else
