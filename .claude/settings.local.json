@@ -14,7 +14,18 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(curl -s https://drinking-caution-crazy.ngrok-free.dev/midtrans/webhook -X POST -H \"Content-Type: application/json\" -d '{\"test\":\"true\"}')"
+      "Bash(curl -s https://drinking-caution-crazy.ngrok-free.dev/midtrans/webhook -X POST -H \"Content-Type: application/json\" -d '{\"test\":\"true\"}')",
+      "Bash(curl -s http://localhost/api/toko/generate-barcode)",
+      "Bash(rtk *)",
+      "Bash(dir \"C:\\\\laragon\\\\www\\\\framework_smt4\\\\resources\\\\views\" /s /b)",
+      "Bash(findstr /i \"antrian\")",
+      "Bash(dir C:\\\\laragon\\\\www\\\\framework_smt4\\\\resources\\\\views\\\\antrian *)",
+      "Bash(dir \"C:\\\\laragon\\\\www\\\\framework_smt4\\\\public\" /b)",
+      "Bash(findstr /i \"audio\")",
+      "Bash(dir \"C:/laragon/www/framework_smt4/public\" /b)",
+      "Bash(curl -N \"http://localhost:8000/sse/antrian\")",
+      "Bash(curl -s \"http://127.0.0.1:8000/guest\")",
+      "Bash(curl *)"
     ]
   }
 }

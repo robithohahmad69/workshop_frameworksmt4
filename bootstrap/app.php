@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
        $middleware->validateCsrfTokens(except: [
         'midtrans/webhook',
     ]);
+
+        // FIX SSE: Register WithoutSession middleware
+        $middleware->alias(['without-session' => \App\Http\Middleware\WithoutSession::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

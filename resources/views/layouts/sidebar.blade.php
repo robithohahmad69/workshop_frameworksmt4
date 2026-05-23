@@ -157,10 +157,46 @@
 
             {{-- PRAKTIKUM 1: Barcode Scanner (Tombol di halaman Barang) --}}
             {{-- PRAKTIKUM 2: Kantin System (CUSTOMER) --}}
+            {{-- KUNJUNGAN TOKO (GELOCATION) --}}
+            <li class="nav-item {{ Request::is('toko') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('toko.index') }}">
+                    <span class="menu-title">Data Toko</span>
+                    <i class="mdi mdi-store menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('kunjungan') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('kunjungan.index') }}">
+                    <span class="menu-title">Kunjungan Toko</span>
+                    <i class="mdi mdi-map-marker-multiple menu-icon"></i>
+                </a>
+            </li>
+
             <li class="nav-item {{ Request::is('order*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('customer.index') }}">
                     <span class="menu-title">Pesan Menu</span>
                     <i class="mdi mdi-food menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('admin/antrian') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('antrian.admin') }}">
+                    <span class="menu-title">Admin Antrian</span>
+                    <i class="mdi mdi-ticket-account menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('guest') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('antrian.guest') }}" target="_blank">
+                    <span class="menu-title">Daftar Antrian</span>
+                    <i class="mdi mdi-ticket menu-icon"></i>
+                </a>
+            </li>
+
+            <li class="nav-item {{ Request::is('papan') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('antrian.papan') }}" target="_blank">
+                    <span class="menu-title">Papan Antrian</span>
+                    <i class="mdi mdi-bullhorn menu-icon"></i>
                 </a>
             </li>
 

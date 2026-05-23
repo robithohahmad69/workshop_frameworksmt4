@@ -17,6 +17,8 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\LabelController;
+use App\Http\Controllers\TokoController;
+use App\Http\Controllers\KunjunganController;
 
 use App\Http\Controllers\Vendor\AuthController;
 use App\Http\Controllers\Vendor\DashboardvendorController;
@@ -154,6 +156,15 @@ Route::middleware('auth')->group(function () {
 
     // API Barcode Scanner - Praktikum 1
     Route::post('/api/barang/scan', [BarangController::class, 'getBarangByBarcode'])->name('api.barang.scan');
+
+    // TOKO & KUNJUNGAN ROUTES
+    Route::get('/toko', [TokoController::class, 'index'])->name('toko.index');
+    Route::post('/toko', [TokoController::class, 'store'])->name('toko.store');
+    Route::get('/api/toko/generate-barcode', [TokoController::class, 'generateBarcode'])->name('api.toko.generateBarcode');
+    Route::post('/api/toko/scan', [TokoController::class, 'scanBarcode'])->name('api.toko.scan');
+
+    Route::get('/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+    Route::post('/kunjungan/simpan', [KunjunganController::class, 'simpan'])->name('kunjungan.simpan');
 
     Route::get('/tabel',       fn() => view('datatables.tabel'));
     Route::get('/datatables',  fn() => view('datatables.datatables'));
@@ -305,3 +316,29 @@ Route::post('/debug/simulate-webhook/{orderId}', function ($orderId) {
       Route::get('/create-file', [App\Http\Controllers\Customer\CustomerController::class, 'createFile'])->name('create-file');
       Route::post('/store-file', [App\Http\Controllers\Customer\CustomerController::class, 'storeFile'])->name('store-file');
   });
+  use App\Http\Controllers\AntrianController;
+
+// =====================
+// MODUL ANTRIAN
+// =====================
+
+// Halaman-halaman view
+Route::get('/guest', [AntrianController::class, 'guestIndex'])->name('antrian.guest');
+Route::get('/tiket/{id}', [AntrianController::class, 'tiket'])->name('antrian.tiket');
+Route::get('/papan', [AntrianController::class, 'papan'])->name('antrian.papan');
+
+// Admin — dilindungi auth (pakai middleware auth yang sudah ada)
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/antrian', [AntrianController::class, 'adminIndex'])->name('antrian.admin');
+});
+
+// Aksi POST dari admin
+Route::post('/antrian/daftar', [AntrianController::class, 'daftar'])->name('antrian.daftar');
+Route::post('/antrian/panggil', [AntrianController::class, 'panggil'])->name('antrian.panggil');
+Route::post('/antrian/panggil-terlambat', [AntrianController::class, 'panggilTerlambat'])->name('antrian.panggilTerlambat');
+Route::post('/antrian/selesai', [AntrianController::class, 'selesai'])->name('antrian.selesai');
+
+// SSE stream — GET, tanpa session (PENTING: tanpa session agar tidak locking)
+Route::middleware('without-session')->group(function () {
+    Route::get('/sse/antrian', [AntrianController::class, 'stream'])->name('antrian.stream');
+});
