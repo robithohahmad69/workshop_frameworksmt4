@@ -28,6 +28,8 @@ use App\Http\Controllers\Vendor\OrderController as VendorOrderController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Vendor\PesananController;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\WargaController;
+use App\Http\Controllers\NfcController;
 
 
 // ========================================
@@ -342,3 +344,10 @@ Route::post('/antrian/selesai', [AntrianController::class, 'selesai'])->name('an
 Route::middleware('without-session')->group(function () {
     Route::get('/sse/antrian', [AntrianController::class, 'stream'])->name('antrian.stream');
 });
+
+Route::get('/warga', [WargaController::class, 'index'])->name('warga.index');
+Route::post('/warga', [WargaController::class, 'store'])->name('warga.store');
+
+Route::get('/nfc', [NfcController::class, 'index'])->name('nfc.index');
+Route::get('/nfc/riwayat', [NfcController::class, 'riwayat'])->name('nfc.riwayat');
+Route::post('/api/nfc/scan', [NfcController::class, 'scan'])->name('nfc.scan');

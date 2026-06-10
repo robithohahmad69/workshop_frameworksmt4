@@ -199,6 +199,27 @@
                     <i class="mdi mdi-bullhorn menu-icon"></i>
                 </a>
             </li>
+            {{-- MODUL 11: NFC e-KTP --}}
+<li class="nav-item {{ Request::is('warga*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('warga.index') }}">
+        <span class="menu-title">Daftar Warga NFC</span>
+        <i class="mdi mdi-account-multiple menu-icon"></i>
+    </a>
+</li>
+
+<li class="nav-item {{ Request::is('nfc*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('nfc.index') }}" target="_blank">
+        <span class="menu-title">Scanner NFC</span>
+        <i class="mdi mdi-nfc menu-icon"></i>
+    </a>
+</li>
+
+<li class="nav-item {{ Request::is('nfc/riwayat*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('nfc.riwayat') }}">
+        <span class="menu-title">Riwayat Scan NFC</span>
+        <i class="mdi mdi-history menu-icon"></i>
+    </a>
+</li>
 
             <li class="nav-item {{ Request::is('profile*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('profile.edit') }}">
